@@ -1,0 +1,30 @@
+{
+	 "vessel":
+	 {
+		  "asTypes": ["OREL1337", "MULE36C"],
+		  "aaiColors": [
+				[255, 255, 255],
+				[ 67, 179, 174],
+				[110,  67, 179],
+				[179,  67,  72],
+				[128, 179,  67]
+		  ],
+		  
+		  "sFlame-texture": "data/graphics/flame.png",
+		  "aiFlame-color":   [226,  88,  34],
+		  "fFlame-raise":    0.01,
+
+		  "iTotal-info-sprites": 7,
+		  "iFuel-mass":     1,
+		  "iGold-mass":     10,
+		  "iStarting-fuel": 10000
+	 },
+
+	 "signal":
+	 {
+		  "iLife":          600,
+		  "iSpeed":         100,
+		  "aiColor":        [255, 255, 255],
+		  "iMax-frequency": 60
+	 }
+}

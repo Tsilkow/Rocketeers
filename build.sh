@@ -15,6 +15,14 @@ itemName[2]="vessel";
 attributes[2]="\E[1m\E[94m";
 itemCompilation[2]="-c vessel.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
+#itemName[3]="resources";
+#!attributes[3]="\E[1m\E[92m";
+#itemCompilation[3]="-c resources.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
+
+itemName[3]="init";
+attributes[3]="\E[1m\E[93m";
+itemCompilation[3]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
+
 function compileLibrary
 {
 	 echo -e "${attributes[$1]}${itemName[$1]}\E[0m";

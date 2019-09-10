@@ -7,6 +7,15 @@ Actor::Actor(std::string name):
 	 ;
 }
 
+void HumanActor::recieve(std::string sender, std::string data)
+{
+	 std::cout << "= = = = = = = = = = = =" << std::endl;
+	 std::cout << "FROM = " << sender << std::endl;
+	 std::cout << "TEXT = " << std::endl;
+	 std::cout << data << std::endl;
+	 std::cout << "= = = = = = = = = = = =" << std::endl;
+}
+
 Output HumanActor::act(Input in)
 {
 	 Output result = {false, false, false, false, false, false, false};
@@ -20,6 +29,11 @@ Output HumanActor::act(Input in)
 	 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space   )) result.shoot = true;
 
 	 return result;
+}
+
+void AIActor::recieve(std::string sender, std::string data)
+{
+	 std::cout << "recieved" << std::endl;
 }
 
 Output AIActor::act(Input in)

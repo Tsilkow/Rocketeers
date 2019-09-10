@@ -1,0 +1,35 @@
+{
+	 "sModel": "MULE36C",
+	 "sTexture": "data/graphics/MULE36C/",
+	 "iTotal-fuel-sprites": 6,
+	 "iTotal-gold-sprites": 6,
+	 "aafCollision-mask": [
+		  [ 0.23,  0.38],
+		  [ 0.20,  0.27],
+		  [ 0.35,  0.27],
+		  [ 0.45,  0.05],
+		  [ 0.15,  0.05],
+		  [ 0.10, -0.10],
+		  [ 0.10, -0.25],
+		  [ 0.00, -0.50],
+		  [-0.10, -0.25],
+		  [-0.10, -0.10],
+		  [-0.15,  0.05],
+		  [-0.45,  0.05],
+		  [-0.35,  0.27],
+		  [-0.20,  0.27],
+		  [-0.23,  0.38]
+	 ],
+
+	 "iSize":                100,
+	 "iBase-mass":           2000,
+	 "iFuel-capacity":       10000,
+	 "iGold-capacity":       2000,
+	 "iMining-speed":        1,
+	 "iShooting-frequency":  30,
+	 "fThrust-power":        200.0,
+	 "iThrust-fuel-use":    -5,
+	 "fManuverability":      0.001,
+	 "iTurn-fuel-use":      -1,
+	 "iDurability":          1000000
+}

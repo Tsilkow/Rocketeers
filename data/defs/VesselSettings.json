@@ -1,0 +1,16 @@
+{
+	 "types": ["OREL1337", "MULE36C"],
+	 "colors": [
+		  [255, 255, 255],
+		  [ 67, 179, 174],
+		  [110,  67, 179],
+		  [179,  67,  72],
+		  [128, 179,  67]
+	 ],
+	 "flameTexture": "/data/graphics/flame.png",
+	 "flameColor": [226,  88,  34],
+	 "flameRaise": 0.01,
+	 "fuelMass": 1,
+	 "goldMass": 10,
+	 "startingFuel": 10000
+}

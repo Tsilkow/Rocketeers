@@ -33,13 +33,20 @@ class Actor
 	 public:
 	 Actor(std::string name);
 
+	 virtual void recieve(std::string sender, std::string data) = 0;
+
 	 virtual Output act(Input in) = 0;
+
+	 
+	 const std::string getName() {return m_name; }
 };
 
 class HumanActor: public Actor
 {
 	 public:
 	 HumanActor(std::string name): Actor(name) {; };
+
+	 void recieve(std::string sender, std::string data);
 
 	 Output act(Input in);
 };
@@ -48,6 +55,8 @@ class AIActor: public Actor
 {
 	 public:
 	 AIActor(std::string name): Actor(name) {; };
+
+	 void recieve(std::string sender, std::string data);
 
 	 Output act(Input in);
 };

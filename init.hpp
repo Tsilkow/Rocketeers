@@ -9,4 +9,4 @@
 
 
 bool init(std::string filename, ResourceHolder<sf::Texture, std::string>& textures, VesselSettings& vSetts,
-				  SignalSettings& sSetts/*, ViewSettings& viSetts*/);
+			 SignalSettings& sSetts, RaySettings& rSetts/*, ViewSettings& viSetts*/);

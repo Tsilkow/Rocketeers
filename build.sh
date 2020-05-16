@@ -2,26 +2,34 @@
 
 projectName="Rockteers";
 projectColor="\E[1m\E[91m\E[47m";
-compilatorAndFlags="g++-7 -std=c++17";
+compilatorAndFlags="g++ -std=c++17";
 gdbFlag="-g -ggdb -gstabs";
 inputAndOutput="2>&1";
 finalCompilation="main.cpp -o Rockteers libraries.a -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[1]="actor";
-attributes[1]="\E[1m\E[97m";
-itemCompilation[1]="-c actor.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+itemName[1]="tom";
+attributes[1]="\E[1m\E[94m";
+itemCompilation[1]="-c tom.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[2]="vessel";
-attributes[2]="\E[1m\E[94m";
-itemCompilation[2]="-c vessel.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+itemName[2]="actor";
+attributes[2]="\E[1m\E[93m";
+itemCompilation[2]="-c actor.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-#itemName[3]="resources";
-#!attributes[3]="\E[1m\E[92m";
-#itemCompilation[3]="-c resources.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
+itemName[3]="signal";
+attributes[3]="\E[1m\E[97m";
+itemCompilation[3]="-c signal.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[3]="init";
-attributes[3]="\E[1m\E[93m";
-itemCompilation[3]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
+itemName[4]="ray";
+attributes[4]="\E[1m\E[91m";
+itemCompilation[4]="-c ray.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+
+itemName[5]="vessel";
+attributes[5]="\E[1m\E[96m";
+itemCompilation[5]="-c vessel.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+
+itemName[6]="init";
+attributes[6]="\E[1m\E[97m";
+itemCompilation[6]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
 
 function compileLibrary
 {

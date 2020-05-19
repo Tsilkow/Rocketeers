@@ -38,4 +38,3 @@ void printVector(sf::Vector2i a, bool enter = false);
 void printVector(sf::Vector2f a, bool enter = false);
 bool linesCollision(sf::Vector2f c1, sf::Vector2f c2, sf::Vector2f d1, sf::Vector2f d2);
 sf::Color colorStep(sf::Color current, sf::Color end, int step);
-

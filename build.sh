@@ -11,25 +11,29 @@ itemName[1]="tom";
 attributes[1]="\E[1m\E[94m";
 itemCompilation[1]="-c tom.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[2]="actor";
-attributes[2]="\E[1m\E[93m";
-itemCompilation[2]="-c actor.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+itemName[2]="arrow";
+attributes[2]="\E[1m\E[35m";
+itemCompilation[2]="-c arrow.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[3]="signal";
-attributes[3]="\E[1m\E[97m";
-itemCompilation[3]="-c signal.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+itemName[3]="actor";
+attributes[3]="\E[1m\E[93m";
+itemCompilation[3]="-c actor.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[4]="ray";
-attributes[4]="\E[1m\E[91m";
-itemCompilation[4]="-c ray.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+itemName[4]="signal";
+attributes[4]="\E[1m\E[97m";
+itemCompilation[4]="-c signal.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[5]="vessel";
-attributes[5]="\E[1m\E[96m";
-itemCompilation[5]="-c vessel.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+itemName[5]="ray";
+attributes[5]="\E[1m\E[91m";
+itemCompilation[5]="-c ray.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[6]="init";
-attributes[6]="\E[1m\E[97m";
-itemCompilation[6]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
+itemName[6]="vessel";
+attributes[6]="\E[1m\E[96m";
+itemCompilation[6]="-c vessel.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+
+itemName[7]="init";
+attributes[7]="\E[1m\E[97m";
+itemCompilation[7]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
 
 function compileLibrary
 {

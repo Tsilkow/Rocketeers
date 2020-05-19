@@ -6,20 +6,23 @@ projectColor="\E[1m\E[91m\E[47m";
 itemName[1]="tom";
 attributes[1]="\E[1m\E[94m";
 
-itemName[2]="actor";
-attributes[2]="\E[1m\E[93m";
+itemName[2]="arrow";
+attributes[2]="\E[1m\E[35m";
 
-itemName[3]="signal";
-attributes[3]="\E[1m\E[97m";
+itemName[3]="actor";
+attributes[3]="\E[1m\E[93m";
 
-itemName[4]="ray";
-attributes[4]="\E[1m\E[91m";
+itemName[4]="signal";
+attributes[4]="\E[1m\E[97m";
 
-itemName[5]="vessel";
-attributes[5]="\E[1m\E[96m";
+itemName[5]="ray";
+attributes[5]="\E[1m\E[91m";
 
-itemName[6]="init";
-attributes[6]="\E[1m\E[97m";
+itemName[6]="vessel";
+attributes[6]="\E[1m\E[96m";
+
+itemName[7]="init";
+attributes[7]="\E[1m\E[97m";
 
 
 function commitLibrary

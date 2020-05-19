@@ -223,16 +223,15 @@ int main()
 		{
 		    emitted = false;
 		    shot = false;
-		    
+
 		    if(!vessels[i].tick(tick, emitted, tempSignal, shared_sSetts,
 					shot, tempRay, shared_rSetts))
 		    {
-			vessels.erase(vessels.begin() + i);
-			--i;
+			/*vessels.erase(vessels.begin() + i);
+			  --i;*/
 		    }
 		    else
 		    {
-
 			for(int j = 0; j < signals.size(); ++j)
 			{
 			    if(signals[j].withinLastTick(
@@ -279,7 +278,7 @@ int main()
 
 		for(auto it = vessels.begin(); it != vessels.end(); ++it)
 		{
-		    it->draw(window);
+		    it->draw(window, true);
 		}
 		
 		break;		 

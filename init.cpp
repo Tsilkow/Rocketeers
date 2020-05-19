@@ -27,6 +27,12 @@ bool init(std::string filename, ResourceHolder<sf::Texture, std::string>& textur
 	vSetts.flameColor = sf::Color(mainParse["vessel"]["aiFlame-color"][0].get<int>(),
 				      mainParse["vessel"]["aiFlame-color"][1].get<int>(),
 				      mainParse["vessel"]["aiFlame-color"][2].get<int>());
+	vSetts.velArrowColor = sf::Color(mainParse["vessel"]["aiVelocity-arrow-color"][0].get<int>(),
+					 mainParse["vessel"]["aiVelocity-arrow-color"][1].get<int>(),
+					 mainParse["vessel"]["aiVelocity-arrow-color"][2].get<int>());
+	vSetts.forArrowColor = sf::Color(mainParse["vessel"]["aiForce-arrow-color"][0].get<int>(),
+					 mainParse["vessel"]["aiForce-arrow-color"][1].get<int>(),
+					 mainParse["vessel"]["aiForce-arrow-color"][2].get<int>());
 	vSetts.flameRaise = mainParse["vessel"]["fFlame-raise"].get<float>();
 
 	vSetts.actionShadeFade = mainParse["vessel"]["fActionShadeFade"].get<float>();
@@ -35,6 +41,8 @@ bool init(std::string filename, ResourceHolder<sf::Texture, std::string>& textur
 	vSetts.goldMass = mainParse["vessel"]["iGold-mass"].get<int>();
 	vSetts.startingFuel = mainParse["vessel"]["iStarting-fuel"].get<int>();
 	vSetts.bouncyness = mainParse["vessel"]["fBouncyness"].get<float>();
+	vSetts.deathTimer = mainParse["vessel"]["iDeathTimer"].get<int>();
+	vSetts.pathLimit = mainParse["vessel"]["iPathLimit"].get<int>();
 	
 	for(int i = 0; i < mainParse["vessel"]["aaFactions"].size(); ++i)
 	{

@@ -18,7 +18,7 @@ Vessel::Vessel(std::shared_ptr<Actor> actor, std::string name, sf::Vector2f posi
     m_fuel(vSetts->startingFuel),
     m_gold(0),
     m_baseMass(vSetts->types[type].baseMass),
-    m_mass(m_baseMass + m_fuel * vSetts->fuelMass),
+    m_mass(m_baseMass + m_fuel * vSetts->fuelMass + m_gold * vSetts->goldMass),
     m_size(vSetts->types[type].size),
     m_fuelCapacity(vSetts->types[type].fuelCapacity),
     m_goldCapacity(vSetts->types[type].goldCapacity),
@@ -35,28 +35,26 @@ Vessel::Vessel(std::shared_ptr<Actor> actor, std::string name, sf::Vector2f posi
     m_lastRay(0),
     m_nextBarrel(0),
     m_hitFade(0),
-    m_recievedFade(0)
+    m_recievedFade(0),
+    m_dead(false),
+    m_deathTimer(vSetts->deathTimer)
 {
     std::cout << getId() << std::endl;
     
     sf::Vector2f baseOrigin = sf::Vector2f(textures.get(m_model + "::primary").getSize())/2.f;
     sf::Vector2f baseScale(((float)m_size) / baseOrigin.x / 2.f, ((float)m_size) / baseOrigin.y / 2.f); 
 	 
-    /*m_collisionMask.insert(m_collisionMask.begin(), vSetts->types[type].collisionMask.begin(),
+    /*m_dynColMask.insert(m_dynColMask.begin(), vSetts->types[type].collisionMask.begin(),
       vSetts->types[type].collisionMask.end());*/
 
-    m_sphereMask = sf::CircleShape(m_size/2.f);
-    m_sphereMask.setFillColor(sf::Color(0, 0, 0, 0));
-    m_sphereMask.setOutlineColor(vSetts->factions[allegiance].primaryColor);
-    m_sphereMask.setOutlineThickness(1);
     for(int i = 0; i < vSetts->types[type].collisionMask.size(); ++i)
     {
-	m_ogCollisionMask.push_back(vSetts->types[type].collisionMask[i] * ((float)m_size));
-	m_collisionMask.push_back(m_ogCollisionMask.back());
-	m_collisionShape.emplace_back(m_collisionMask.back() + m_position,
+	m_staColMask.push_back(vSetts->types[type].collisionMask[i] * ((float)m_size));
+	m_dynColMask.push_back(m_staColMask.back());
+	m_colMaskRepr.emplace_back(m_dynColMask.back() + m_position,
 				      vSetts->factions[allegiance].primaryColor);
     }
-    m_collisionShape.emplace_back(m_collisionMask[0] + m_position, vSetts->factions[allegiance].primaryColor);
+    m_colMaskRepr.emplace_back(m_dynColMask[0] + m_position, vSetts->factions[allegiance].primaryColor);
 	 
     for(int i = 0; i < vSetts->types[type].barrels.size(); ++i)
     {
@@ -115,12 +113,22 @@ Vessel::Vessel(std::shared_ptr<Actor> actor, std::string name, sf::Vector2f posi
 
     m_flameSize = sf::Vector2f(((float)m_size) / textures.get("flame").getSize().x,
 			       ((float)m_size) / textures.get("flame").getSize().x);
+
+    m_velArrow = Arrow();
+    m_velArrow.setColor(m_vSetts->velArrowColor);
+    m_forArrow = Arrow();
+    m_forArrow.setColor(m_vSetts->forArrowColor);
+    m_path.push_back(sf::Vertex(m_position, sf::Color::White));
 }
 
 void Vessel::applyForce(sf::Vector2f toAdd)
 {
     m_force += toAdd;
-    //m_strain += length(toAdd);
+}
+
+void Vessel::applyStrain(float toAdd)
+{
+    m_strain += toAdd;
 }
 
 int Vessel::changeFuel(int change)
@@ -177,30 +185,47 @@ bool Vessel::turn(bool clockwise)
 bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_ptr<SignalSettings>& sSetts,
 		  bool& createRay, Ray& tempRay, std::shared_ptr<RaySettings>& rSetts)
 {
-    if(m_strain > m_durability || m_rayResistance <= 0) return false;
+    if(m_strain > m_durability || m_rayResistance <= 0) m_dead = true;
 	 
     m_velocity += m_force/((float)m_mass);
     m_position += m_velocity;
+
+    m_path.push_back(sf::Vertex(m_position, sf::Color::White));
+    if(m_path.size() > m_vSetts->pathLimit) m_path.erase(m_path.begin());
+    m_velArrow.setDirection(m_position, 60.f*m_velocity + m_position);
+    m_forArrow.setDirection(m_position, m_force + m_position);
+    
     m_force = sf::Vector2f(0.f, 0.f);
     m_strain = 0;
     m_angle += m_angularVelocity;
-	 
-    m_flameHeight = std::max(m_flameHeight - 2*m_vSetts->flameRaise, 0.f);
 
-    m_hitFade      = std::max(0, m_hitFade      - 1);
-    m_recievedFade = std::max(0, m_recievedFade - 1);
-
-    if(m_primarySprite.getColor() != m_vSetts->factions[m_allegiance].primaryColor ||
-       m_hitFade > 0 || m_recievedFade > 0)
+    if(!m_dead)
     {
-	m_primarySprite.setColor(
-	       colorStep(m_primarySprite.getColor(),
-			 m_vSetts->factions[m_allegiance].primaryColor,
-			 std::max(m_hitFade, m_recievedFade)));
-	m_secondarySprite.setColor(
-	       colorStep(m_secondarySprite.getColor(),
-			 m_vSetts->factions[m_allegiance].secondaryColor,
-			 std::max(m_hitFade, m_recievedFade)));
+	m_flameHeight = std::max(m_flameHeight - 2*m_vSetts->flameRaise, 0.f);
+
+	m_hitFade      = std::max(0, m_hitFade      - 1);
+	m_recievedFade = std::max(0, m_recievedFade - 1);
+
+	if(m_primarySprite.getColor() != m_vSetts->factions[m_allegiance].primaryColor ||
+	   m_hitFade > 0 || m_recievedFade > 0)
+	{
+	    m_primarySprite.setColor(
+		   colorStep(m_primarySprite.getColor(),
+			     m_vSetts->factions[m_allegiance].primaryColor,
+			     std::max(m_hitFade, m_recievedFade)));
+	    m_secondarySprite.setColor(
+		   colorStep(m_secondarySprite.getColor(),
+			     m_vSetts->factions[m_allegiance].secondaryColor,
+			     std::max(m_hitFade, m_recievedFade)));
+	}
+    }
+    else
+    {
+	m_flameHeight = 0.f;
+	m_hitFade = 0;
+	m_recievedFade = 0;
+
+	m_primarySprite.setColor(m_vSetts->factions[0].primaryColor);
     }
 
     m_primarySprite.setPosition(m_position);
@@ -215,7 +240,7 @@ bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_
     m_flameSprite.setPosition(m_position + angleToVector2f(m_angle + M_PI/2.f) * (float)m_size / 2.f);
     m_flameSprite.setRotation(radToDeg(m_angle));
     m_flameSprite.setScale(m_flameSize.x, m_flameSize.y * m_flameHeight);
-	 
+
     for(int i = 0; i < m_fuelSprites.size(); ++i)
     {
 	m_fuelSprites[i].setPosition(m_position);
@@ -226,25 +251,26 @@ bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_
     {
 	m_goldSprites[i].setPosition(m_position);
 	m_goldSprites[i].setRotation(radToDeg(m_angle));
-    }
-	 
+	}
+    
     for(int i = 0; i < m_infoSprites.size(); ++i)
     {
 	m_infoSprites[i].setPosition(m_position);
 	m_infoSprites[i].setRotation(radToDeg(m_angle));
     }
 
-    for(int i = 0; i <= m_collisionMask.size(); ++i)
+    for(int i = 0; i <= m_dynColMask.size(); ++i)
     {
-        if(i < m_ogCollisionMask.size())
-	    m_collisionMask[i] = rotate(m_ogCollisionMask[i], m_angle) + m_position;
-	m_collisionShape[i].position = m_collisionMask[modulo(i, m_collisionMask.size())];
+        if(i < m_staColMask.size())
+	    m_dynColMask[i] = rotate(m_staColMask[i], m_angle) + m_position;
+	m_colMaskRepr[i].position = m_dynColMask[modulo(i, m_dynColMask.size())];
     }
 
     m_sphereMask.setPosition(m_position.x - m_size/2.f, m_position.y - m_size/2.f);
 
     Input in = {0};
-    m_status = m_actor->act(in);
+    if(!m_dead) m_status = m_actor->act(in);
+    else m_status = {false, false, false, false, false, false, false};
 
     if(m_status.thrust) thrust();
     if(m_status.turnLeft) turn(false);
@@ -271,26 +297,32 @@ bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_
 	else if(m_angularVelocity < 0.f) turn(true);
     }
 
-    return true;
+    return !m_dead;
 }
 
 void Vessel::recieve(Signal recieved)
 {
-    m_actor->recieve(recieved.getSender(), recieved.getData());
+    if(!m_dead)
+    {
+	m_actor->recieve(recieved.getSender(), recieved.getData());
     
-    m_recievedFade = m_vSetts->actionShadeFade;
-    m_primarySprite.setColor(recieved.getColor());
-    m_secondarySprite.setColor(recieved.getColor());
+	m_recievedFade = m_vSetts->actionShadeFade;
+	m_primarySprite.setColor(recieved.getColor());
+	m_secondarySprite.setColor(recieved.getColor());
+    }
 }
 
 void Vessel::getHit(Ray hitting)
 {
-    std::cout << getId() + ": I GOT HIT - " << m_rayResistance << " hits left" << std::endl;
-    --m_rayResistance;
+    if(!m_dead)
+    {
+	std::cout << getId() + ": I GOT HIT - " << m_rayResistance << " hits left" << std::endl;
+	--m_rayResistance;
     
-    m_hitFade = m_vSetts->actionShadeFade;
-    m_primarySprite.setColor(hitting.getColor());
-    m_secondarySprite.setColor(hitting.getColor());
+	m_hitFade = m_vSetts->actionShadeFade;
+	m_primarySprite.setColor(hitting.getColor());
+	m_secondarySprite.setColor(hitting.getColor());
+    }
 }
 
 void Vessel::centerView(sf::View& targetView)
@@ -299,41 +331,50 @@ void Vessel::centerView(sf::View& targetView)
     targetView.setRotation(radToDeg(m_angle));
 }
 
-void Vessel::draw(sf::RenderTarget& target)
+void Vessel::draw(sf::RenderTarget& target, bool debug)
 {
     int fuelLevel = std::round(((float)m_fuel)/m_fuelCapacity * m_fuelSprites.size());
     int goldLevel;
     if(m_goldCapacity != 0) goldLevel= std::round(((float)m_gold)/m_goldCapacity * m_goldSprites.size());
     else goldLevel = 0;
     
-    target.draw(m_secondarySprite);
+    if(!m_dead) target.draw(m_secondarySprite);
     target.draw(m_primarySprite);
+    // target.draw(m_landSprite);
 
-    if(m_status.thrust)    target.draw(m_infoSprites[0]);
-    if(m_status.turnLeft)  target.draw(m_infoSprites[1]);
-    if(m_status.turnRight) target.draw(m_infoSprites[2]);
-    if(m_status.signal)    target.draw(m_infoSprites[3]);
-    if(m_status.load)      target.draw(m_infoSprites[4]);
-    if(m_status.unload)    target.draw(m_infoSprites[5]);
-    if(m_status.shoot)     target.draw(m_infoSprites[6]);
-
-    for(int i = fuelLevel; i >= 1; --i)
+    if(!m_dead)
     {
-	target.draw(m_fuelSprites[i-1]);
+	if(m_status.thrust)    target.draw(m_infoSprites[0]);
+	if(m_status.turnLeft)  target.draw(m_infoSprites[1]);
+	if(m_status.turnRight) target.draw(m_infoSprites[2]);
+	if(m_status.signal)    target.draw(m_infoSprites[3]);
+	if(m_status.load)      target.draw(m_infoSprites[4]);
+	if(m_status.unload)    target.draw(m_infoSprites[5]);
+	if(m_status.shoot)     target.draw(m_infoSprites[6]);
+
+	for(int i = fuelLevel; i >= 1; --i)
+	{
+	    target.draw(m_fuelSprites[i-1]);
+	}
+
+	for(int i = goldLevel; i >= 1; --i)
+	{
+	    target.draw(m_goldSprites[i-1]);
+	}
+
+	target.draw(m_flameSprite);
     }
 
-    for(int i = goldLevel; i >= 1; --i)
+    if(debug)
     {
-	target.draw(m_goldSprites[i-1]);
+	target.draw(&m_colMaskRepr[0], m_colMaskRepr.size(), sf::LineStrip);
+
+	m_velArrow.draw(target);
+	
+	m_forArrow.draw(target);
+
+	target.draw(&m_path[0], m_path.size(), sf::LineStrip);
     }
-
-    target.draw(m_flameSprite);
-
-    //target.draw(m_landSprite);
-
-    //target.draw(m_sphereMask);
-
-    target.draw(&m_collisionShape[0], m_collisionShape.size(), sf::LineStrip);
 }
 
 float dotProduct(sf::Vector2f a, sf::Vector2f b)
@@ -344,13 +385,10 @@ float dotProduct(sf::Vector2f a, sf::Vector2f b)
 bool resolveCollision(Vessel& A, Vessel& B)
 {
     sf::Vector2f connector = B.getPosition() - A.getPosition();
-    sf::Vector2f impulse(0.f, 0.f);
-    float bounce = std::min(A.getBounce(), B.getBounce());
-    bool collision = false;
-    float alongDir;
 	    
     if(length(connector) < (A.getSize()/2 + B.getSize()/2))
     {
+	bool collision = false;
 	for(int i = 0; i < A.getMask().size(); ++i)
 	{
 	    for(int j = 0; j < B.getMask().size(); ++j)
@@ -370,18 +408,19 @@ bool resolveCollision(Vessel& A, Vessel& B)
 
         if(collision)
 	{
-	    alongDir = dotProduct(B.getVelocity() - A.getVelocity(), connector/length(connector));
-	    if(alongDir > 0) return false;
-	    impulse = -(1 + bounce) * alongDir * connector/length(connector)
-	    /(1.f/A.getMass() + 1.f/B.getMass());
-
-	    if(length(impulse) < 100.f)
-		impulse = impulse * 100.f;
+	    float alongDir = dotProduct(B.getVelocity() - A.getVelocity(), connector/length(connector));
 	    
-	    std::cout << "COLLISION(" << length(impulse) << "): " << A.getId() << "|" << B.getId() << std::endl;
+	    if(alongDir > 0) return false;
+	    
+	    sf::Vector2f impulse(0.f, 0.f);
+	    float bounce = std::min(A.getBounce(), B.getBounce());
+	    
+	    impulse = -alongDir * connector/length(connector)/(1.f/A.getMass() + 1.f/B.getMass());
 
-	    A.applyForce(-impulse);
-	    B.applyForce( impulse);
+	    A.applyForce (-impulse * (1 + bounce));
+	    A.applyStrain(length(impulse) * (1 - bounce));
+	    B.applyForce( impulse * (1 + bounce));
+	    A.applyStrain(length(impulse) * (1 - bounce));
 
 	    return true;
 	}

@@ -9,6 +9,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include "tom.hpp"
+#include "arrow.hpp"
 #include "actor.hpp"
 #include "signal.hpp"
 #include "ray.hpp"
@@ -50,6 +51,8 @@ struct VesselSettings
     std::vector<Faction> factions;
     //std::vector< std::pair<sf::Color, sf::Color> > allegianceColors;
     sf::Color flameColor;
+    sf::Color velArrowColor;
+    sf::Color forArrowColor;
     float flameRaise;
     float actionShadeFade;
     int TOInfoSprites;
@@ -57,6 +60,8 @@ struct VesselSettings
     int goldMass;
     int startingFuel;
     float bouncyness;
+    int deathTimer;
+    int pathLimit;
 };
 
 class Vessel
@@ -94,19 +99,24 @@ class Vessel
     int m_nextBarrel;
     int m_hitFade;
     int m_recievedFade;
+    bool m_dead;
+    int m_deathTimer;
     sf::Vector2f m_flameSize;
-    std::vector<sf::Vector2f> m_ogCollisionMask;
-    std::vector<sf::Vector2f> m_collisionMask;
+    std::vector<sf::Vector2f> m_staColMask; // static collision mask (without position factoring)
+    std::vector<sf::Vector2f> m_dynColMask; // dynamic collision mask (with position factoring)
     std::vector<sf::Vector2f> m_barrels;
     sf::CircleShape m_sphereMask;
     sf::Sprite m_primarySprite;
     sf::Sprite m_secondarySprite;
     sf::Sprite m_landSprite;
     sf::Sprite m_flameSprite;
-    std::vector<sf::Vertex> m_collisionShape;
+    std::vector<sf::Vertex> m_colMaskRepr; // collsion mask representation
     std::vector<sf::Sprite> m_fuelSprites;
     std::vector<sf::Sprite> m_goldSprites;
     std::vector<sf::Sprite> m_infoSprites;
+    std::vector<sf::Vertex> m_path;
+    Arrow m_velArrow;
+    Arrow m_forArrow;
 
     int changeFuel(int change);
 
@@ -122,6 +132,10 @@ class Vessel
 	   ResourceHolder<sf::Texture, std::string>& textures);
 
     void applyForce(sf::Vector2f toAdd);
+    
+    void applyStrain(float toAdd);
+    
+    void applyStrain(int amount);
 	 
     bool tick(int time, bool& createSignal, Signal& tempSignal, std::shared_ptr<SignalSettings>& sSetts,
 	      bool& createRay, Ray& tempRay, std::shared_ptr<RaySettings>& rSetts);
@@ -132,7 +146,7 @@ class Vessel
 	 
     void centerView(sf::View& targetView);
 
-    void draw(sf::RenderTarget& target);
+    void draw(sf::RenderTarget& target, bool debug = false);
 
 
     const std::string getId() {return m_name + " " + m_model; }
@@ -148,7 +162,7 @@ class Vessel
     const int getFuel() {return m_fuel; }
     const int getGold() {return m_gold; }
     const int getMass() {return m_mass; }
-    const std::vector<sf::Vector2f> getMask() {return m_collisionMask; }
+    const std::vector<sf::Vector2f> getMask() {return m_dynColMask; }
     const float getBounce() {return m_vSetts->bouncyness; }
 };
 

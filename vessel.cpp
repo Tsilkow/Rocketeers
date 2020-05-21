@@ -6,7 +6,7 @@ Vessel::Vessel(std::shared_ptr<Actor> actor, std::string name, sf::Vector2f posi
 	       ResourceHolder<sf::Texture, std::string>& textures):
     m_vSetts(vSetts),
     m_actor(actor),
-    m_name(vSetts->factions[allegiance].id + name),
+    m_name(name),
     m_model(vSetts->types[type].model),
     m_allegiance(allegiance),
     m_position(position),
@@ -185,7 +185,11 @@ bool Vessel::turn(bool clockwise)
 bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_ptr<SignalSettings>& sSetts,
 		  bool& createRay, Ray& tempRay, std::shared_ptr<RaySettings>& rSetts)
 {
-    if(m_strain > m_durability || m_rayResistance <= 0) m_dead = true;
+    if(m_strain > m_durability || m_rayResistance <= 0)
+    {
+	m_dead = true;
+	m_allegiance = 0;
+    }
 	 
     m_velocity += m_force/((float)m_mass);
     m_position += m_velocity;

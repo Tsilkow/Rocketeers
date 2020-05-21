@@ -224,38 +224,31 @@ int main()
 		    emitted = false;
 		    shot = false;
 
-		    if(!vessels[i].tick(tick, emitted, tempSignal, shared_sSetts,
-					shot, tempRay, shared_rSetts))
+		    vessels[i].tick(tick, emitted, tempSignal, shared_sSetts, shot, tempRay, shared_rSetts);
+		    
+		    for(int j = 0; j < signals.size(); ++j)
 		    {
-			/*vessels.erase(vessels.begin() + i);
-			  --i;*/
-		    }
-		    else
-		    {
-			for(int j = 0; j < signals.size(); ++j)
+			if(signals[j].withinLastTick(
+				  vessels[i].getPosition() - vessels[i].getVelocity(),
+				  vessels[i].getPosition()))
 			{
-			    if(signals[j].withinLastTick(
-				      vessels[i].getPosition() - vessels[i].getVelocity(),
-				      vessels[i].getPosition()))
-			    {
-				vessels[i].recieve(signals[j]);
-			    }
+			    vessels[i].recieve(signals[j]);
 			}
+		    }
 						  
-			for(int j = 0; j < rays.size(); ++j)
+		    for(int j = 0; j < rays.size(); ++j)
+		    {
+			if(rays[j].hit(vessels[i].getMask(), vessels[i].getPosition(),
+				       vessels[i].getSize()))
 			{
-			    if(rays[j].hit(vessels[i].getMask(), vessels[i].getPosition(),
-					   vessels[i].getSize()))
-			    {
-				vessels[i].getHit(rays[j]);
-			    }
+			    vessels[i].getHit(rays[j]);
 			}
-								
-			if(observedId == vessels[i].getId()) vessels[i].centerView(focusView);
-								
-			if(emitted) signals.push_back(tempSignal);
-			if(shot)    rays   .push_back(tempRay   );
 		    }
+								
+		    if(observedId == vessels[i].getId()) vessels[i].centerView(focusView);
+								
+		    if(emitted) signals.push_back(tempSignal);
+		    if(shot)    rays   .push_back(tempRay   );
 		}
 
 		for(int i = 0; i < vessels.size(); ++i)
@@ -278,7 +271,7 @@ int main()
 
 		for(auto it = vessels.begin(); it != vessels.end(); ++it)
 		{
-		    it->draw(window, true);
+		    it->draw(window, false);
 		}
 		
 		break;		 

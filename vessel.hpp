@@ -149,8 +149,8 @@ class Vessel
     void draw(sf::RenderTarget& target, bool debug = false);
 
 
-    const std::string getId() {return m_name + " " + m_model; }
-    const std::string getName() {return m_name; }
+    const std::string getId() {return m_vSetts->factions[m_allegiance].id + " " + m_name + " " + m_model; }
+    const std::string getName() {return m_vSetts->factions[m_allegiance].id + " " + m_name; }
     const std::string getModel() {return m_model; }
     const std::string getActorName() {return m_actor->getName(); }
     const int getAllegiance() {return m_allegiance; }

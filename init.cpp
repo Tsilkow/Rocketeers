@@ -152,7 +152,6 @@ bool init(std::string filename, ResourceHolder<sf::Texture, std::string>& textur
 	sSetts.maxFreq = mainParse["signal"]["iMax-frequency"].get<int>();
 
 	// Loading ray settings
-
 	 
 	rSetts.life        = mainParse["ray"]["iLife"].get<int>();
 	rSetts.speed       = mainParse["ray"]["iSpeed"].get<int>();

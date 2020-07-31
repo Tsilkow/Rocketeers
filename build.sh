@@ -31,9 +31,13 @@ itemName[6]="vessel";
 attributes[6]="\E[1m\E[96m";
 itemCompilation[6]="-c vessel.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
 
-itemName[7]="init";
-attributes[7]="\E[1m\E[97m";
-itemCompilation[7]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
+itemName[7]="planet";
+attributes[7]="\E[1m\E[33m";
+itemCompilation[7]="-c planet.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio";
+
+itemName[8]="init";
+attributes[8]="\E[1m\E[97m";
+itemCompilation[8]="-c init.cpp -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio"
 
 function compileLibrary
 {

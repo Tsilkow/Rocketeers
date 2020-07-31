@@ -21,8 +21,11 @@ attributes[5]="\E[1m\E[91m";
 itemName[6]="vessel";
 attributes[6]="\E[1m\E[96m";
 
-itemName[7]="init";
-attributes[7]="\E[1m\E[97m";
+itemName[7]="planet";
+attributes[7]="\E[1m\E[33m";
+
+itemName[8]="init";
+attributes[8]="\E[1m\E[97m";
 
 
 function commitLibrary

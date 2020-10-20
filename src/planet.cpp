@@ -42,6 +42,7 @@ std::vector<int> generateHeights(int base, int TOSegments, int amplitude, float 
 }
 
 Planet::Planet(const std::shared_ptr<PlanetSettings> pSetts, std::string name, int radius, int mass, sf::Vector2f position, float angVelocity, int TOSegments, int amplitude, int smoothness, int peakFrequency, int peakVariation, int peakAmplitude, sf::Color Cterrain, int atmHeight, float atmVanishFact, sf::Color Catmosphere):
+    m_pSetts(pSetts),
     m_name(name),
     m_radius(radius),
     m_mass(mass),
@@ -90,6 +91,17 @@ void Planet::tick()
     {
 	m_dynAtmosphere[i].position = R.transformPoint(m_statAtmosphere[i]) + m_position;
     }
+}
+
+sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, int objectMass)
+{
+    sf::Vector2f result = (m_position - objectPosition) *
+	m_pSetts->gravConst * (float)m_mass * (float)objectMass *
+	1.f/raiseToPower(length(m_position - objectPosition), 3);
+
+    printVector(result, true);
+
+    return result;
 }
 
 void Planet::draw(sf::RenderTarget& target, bool orbit)

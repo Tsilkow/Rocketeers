@@ -23,6 +23,7 @@ class Planet
 {
     std::string m_name;
 
+    std::shared_ptr<PlanetSettings> m_pSetts;
     int m_radius;
     int m_mass;
     float m_segmentSize;
@@ -47,7 +48,7 @@ class Planet
 
     void tick();
 
-    //void exertForce
+    sf::Vector2f exertForce(sf::Vector2f objectPosition, int objectMass);
 
     void draw(sf::RenderTarget& target, bool orbit = false);
 };

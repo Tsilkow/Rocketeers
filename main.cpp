@@ -96,10 +96,10 @@ int main()
     bool hasFocus = true;
     GameState currentState = GameState::Simulation;
     unsigned long long int tick = 0;
+    bool debug = false;
 
     sf::RenderWindow window(sf::VideoMode(viSetts.resolution.x, viSetts.resolution.y), "Rocketeers");
     window.setFramerateLimit(viSetts.fpsLimit);
-    sf::Event event;
     sf::View manualView;
     sf::View focusView;
     sf::View planetView;
@@ -108,13 +108,11 @@ int main()
     enum ViewMode{Manual, Focus};
     ViewMode currentMode = ViewMode::Manual;
 
-    bool emitted = false;
-    bool shot = false;
-
     reposition(viSetts.resolution, viSetts.resolution, manualView, focusView, true);
 
     while(!exit)
     {
+	sf::Event event;
 	window.clear();
 	switch(currentState)
 	{
@@ -152,6 +150,9 @@ int main()
 				    case sf::Keyboard::BackSlash:
 					window.setSize(sf::Vector2u(sf::VideoMode::getDesktopMode().width,
 								    sf::VideoMode::getDesktopMode().height));
+					break;
+				    case sf::Keyboard::F5:
+					debug = !debug;
 					break;
 				    case sf::Keyboard::F1:
 					currentMode = ViewMode::Manual;
@@ -219,11 +220,16 @@ int main()
 			rays.erase(rays.begin() + i);
 		    }
 		}
+
+		for(int i = 0; i < planets.size(); ++i)
+		{
+		    planets[i].tick();
+		}
 	        
 		for(int i = 0; i < vessels.size(); ++i)
 		{
-		    emitted = false;
-		    shot = false;
+		    bool emitted = false;
+		    bool shot = false;
 
 		    vessels[i].tick(tick, emitted, tempSignal, shared_sSetts, shot, tempRay, shared_rSetts);
 		    
@@ -260,6 +266,15 @@ int main()
 		    }
 		}
 
+		for(int i = 0; i < planets.size(); ++i)
+		{
+		    for(int j = 0; j < vessels.size(); ++j)
+		    {
+			vessels[j].applyForce(planets[i].exertForce(vessels[j].getPosition(),
+								    vessels[j].getMass()));
+		    }
+		}
+
 		for(auto it = signals.begin(); it != signals.end(); ++it)
 		{
 		    it->draw(window);
@@ -272,12 +287,12 @@ int main()
 
 		for(auto it = planets.begin(); it != planets.end(); ++it)
 		{
-		    it->draw(window, false);
+		    it->draw(window, debug);
 		}
 
 		for(auto it = vessels.begin(); it != vessels.end(); ++it)
 		{
-		    it->draw(window, false);
+		    it->draw(window, debug);
 		}
 		
 		break;		 

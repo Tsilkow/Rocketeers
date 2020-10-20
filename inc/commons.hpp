@@ -21,6 +21,7 @@ template <typename T> int sign(T val)
 
 int boolToSign(bool input);
 std::string strPrecRound(double value, short precision);
+float raiseToPower(float value, int power);
 int randomI(int min, int max);
 float randomF(float min, float max, float step = 0.01f);
 bool randomB();

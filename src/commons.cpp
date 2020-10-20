@@ -15,6 +15,14 @@ std::string strPrecRound(double value, short precision)
     return ss.str();
 }
 
+float raiseToPower(float value, int power)
+{
+    if(power == 0) return 1;
+    if(power == 1) return value;
+    if(power % 2 == 0) return raiseToPower(value*value, power/2);
+    else return value * raiseToPower(value, power-1);
+}
+
 int randomI(int min, int max)
 {
     if(max == min) return min;

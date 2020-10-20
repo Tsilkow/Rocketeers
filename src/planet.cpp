@@ -76,20 +76,19 @@ Planet::Planet(const std::shared_ptr<PlanetSettings> pSetts, std::string name, i
 void Planet::tick()
 {
     sf::Transform R;
-    sf::Vector2f oldPos = m_position;
     m_position += m_velocity;
     m_angle += m_angVelocity;
 
-    R.rotate(radToDeg(m_angVelocity));
+    R.rotate(radToDeg(m_angle));
 
     for(int i = 0; i < m_dynSurface.size(); ++i)
     {
-	m_dynSurface[i].position = R.transformPoint(m_dynSurface[i].position - oldPos) + m_position;
+	m_dynSurface[i].position = R.transformPoint(m_statSurface[i]) + m_position;
     }
     
     for(int i = 0; i < m_dynAtmosphere.size(); ++i)
     {
-	m_dynAtmosphere[i].position = R.transformPoint(m_dynAtmosphere[i].position - oldPos) + m_position;
+	m_dynAtmosphere[i].position = R.transformPoint(m_statAtmosphere[i]) + m_position;
     }
 }
 

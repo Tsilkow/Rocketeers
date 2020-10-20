@@ -79,7 +79,7 @@ int main()
     vector<Vessel> vessels;
     vector<Planet> planets;
 
-    if(!setup("data/setup2.json", vessels, planets, player, enemy, textures, shared_vSetts, pSetts)) return 1;
+    if(!setup("data/setup3.json", vessels, planets, player, enemy, textures, shared_vSetts, pSetts)) return 1;
     
     string observedId = vessels.back().getId();
     cout << observedId << endl;

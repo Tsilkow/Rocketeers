@@ -1,0 +1,94 @@
+{
+    "name": "Lone Planet",
+    
+    "fGravity":                 0.01,
+    "fAirFriction":             0.1,
+    
+    "iPlayerControlledFaction": 4,
+
+    "planets":
+    [
+	{
+	    
+	    "sName":            "Orange Planet",
+	    "iRadius":          25000,
+	    "iMass":            20000000,
+	    "aiPosition":       [ 0.0,  0.0],
+	    "aiVelocity":       [10.0, -8.0],
+	    "fAngularVelocity": 0.001,
+
+	    "orbit":
+	    {
+		"present": false
+	    },
+	    
+	    "ore":
+	    {
+		"present":      true,
+		"aiColor":      [255, 255,   0],
+		"fProbability": 0.1,
+		"iTotal":       6000,
+		"fVariation":    0.5
+	    },
+
+	    "surface":
+	    {
+		"present":           true,
+		"aiColor":           [255,  96,   0],
+		"iSegmentsTotal":    250,
+		"iGeneralAmplitude": 50,
+		"fSmoothness":       0.2,
+		"iPeakFrequency":    10,
+		"iPeakVariation":    3,
+		"iPeakAmplitude":    2000
+	    },
+
+	    "atmosphere":
+	    {
+		"present":          true,
+		"aiColor":          [172, 106, 84],
+		"iHeight":          10000,
+		"iLayers":          10,
+		"fVanishingFactor": 1.0
+	    }
+	}
+    ],
+
+    "vessels":
+    [
+	{
+	    "sName":       "001",
+	    "aiPosition":  [30000, 0],
+	    "iType":       0,
+	    "iAllegiance": 1
+	},
+	
+	{
+	    "sName":       "002",
+	    "aiPosition":  [30200, 0],
+	    "iType":       1,
+	    "iAllegiance": 1
+	},
+	
+	{
+	    "sName":       "003",
+	    "aiPosition":  [30400, 0],
+	    "iType":       0,
+	    "iAllegiance": 2
+	},
+	
+	{
+	    "sName":       "004",
+	    "aiPosition":  [30600, 0],
+	    "iType":       1,
+	    "iAllegiance": 3
+	},
+	
+	{
+	    "sName":       "005",
+	    "aiPosition":  [30800, 0],
+	    "iType":       0,
+	    "iAllegiance": 4
+	}
+    ]
+}

@@ -204,11 +204,12 @@ bool setup(std::string filename, std::vector<Vessel>& vessels, std::vector<Plane
 	{
 	    if(mainParse["planets"][i]["atmosphere"]["present"].get<bool>() == true)
 	    {
-		atmHeight     = mainParse["planets"][i]["atmosphere"]["iatmosphereHeight"].get<int>();
-		atmVanishFact = mainParse["planets"][i]["atmosphere"]["iatmosphereVanishFactor"].get<float>();
+		atmHeight     = mainParse["planets"][i]["atmosphere"]["iHeight"].get<int>();
+		atmVanishFact = mainParse["planets"][i]["atmosphere"]["fVanishingFactor"].get<float>();
 		Catmosphere   = sf::Color(mainParse["planets"][i]["atmosphere"]["aiColor"][0].get<int>(),
 					  mainParse["planets"][i]["atmosphere"]["aiColor"][1].get<int>(),
 					  mainParse["planets"][i]["atmosphere"]["aiColor"][2].get<int>());
+		std::cout << "I'm through with atmosphere" << std::endl;
 	    }
 	    else
 	    {		
@@ -224,7 +225,7 @@ bool setup(std::string filename, std::vector<Vessel>& vessels, std::vector<Plane
 				 sf::Vector2f(mainParse["planets"][i]["aiPosition"][0].get<float>(),
 					      mainParse["planets"][i]["aiPosition"][1].get<float>()),
 				 mainParse["planets"][i]["fAngularVelocity"].get<float>(),
-				 mainParse["planets"][i]["surface"]["iTotalOfSegments"].get<int>(),
+				 mainParse["planets"][i]["surface"]["iSegmentsTotal"].get<int>(),
 				 mainParse["planets"][i]["surface"]["iGeneralAmplitude"].get<int>(),
 				 mainParse["planets"][i]["surface"]["fSmoothness"].get<float>(),
 				 mainParse["planets"][i]["surface"]["iPeakFrequency"].get<int>(),
@@ -236,6 +237,7 @@ bool setup(std::string filename, std::vector<Vessel>& vessels, std::vector<Plane
 				 atmHeight,
 				 atmVanishFact,
 				 Catmosphere);
+	    std::cout << "I'm through with planet" << std::endl;
 	}
 
 	for(int i = 0; i < mainParse["vessels"].size(); ++i)

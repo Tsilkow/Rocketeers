@@ -1,30 +1,46 @@
 {
-	 "vessel":
-	 {
-		  "asTypes": ["OREL1337", "MULE36C"],
-		  "aaiColors": [
-				[255, 255, 255],
-				[ 67, 179, 174],
-				[110,  67, 179],
-				[179,  67,  72],
-				[128, 179,  67]
-		  ],
-		  
-		  "sFlame-texture": "data/graphics/flame.png",
-		  "aiFlame-color":   [226,  88,  34],
-		  "fFlame-raise":    0.01,
+    "vessel":
+    {
+	"asTypes": ["OREL1737", "KETTLE2B"],
+	"aaFactions":
+	[
+	    ["destroyed"        , "XXXX", [255, 255, 255], [159, 159, 159]],
+	    ["Merry Pioneers"   , "MRRY", [255, 192,   0], [255,   0,   0]],
+	    ["TEA Consolidated" , "TEAC", [119, 204, 200], [160,  96,  64]],
+	    ["Lime Corporation" , "LIME", [128, 255,   0], [ 85, 170,  85]],
+	    ["ARES Technologies", "ARES", [255, 255, 255], [  0,  96, 255]]
+	],
+	
+	"sFlame-texture":           "data/graphics/flame.png",
+	"aiFlame-color":            [226,  88,  34],
+	"aiVelocity-arrow-color":   [  0, 255,   0],
+	"aiForce-arrow-color":      [255,   0, 255],
+	"fFlame-raise":             0.01,
 
-		  "iTotal-info-sprites": 7,
-		  "iFuel-mass":     1,
-		  "iGold-mass":     10,
-		  "iStarting-fuel": 10000
-	 },
+	"iTotal-info-sprites": 7,
+	"fActionShadeFade":    60,
+	"iFuel-mass":          1,
+	"iGold-mass":          10,
+	"iStarting-fuel":      10000,
+	"fBouncyness":         0.2,
+	"iDeathTimer":         3600,
+	"iPathLimit":          600
+    },
 
-	 "signal":
-	 {
-		  "iLife":          600,
-		  "iSpeed":         100,
-		  "aiColor":        [255, 255, 255],
-		  "iMax-frequency": 60
-	 }
+    "signal":
+    {
+	"iLife":          600,
+	"iSpeed":         100,
+	"aiColor":        [255, 255, 255],
+	"iMax-frequency": 60
+    },
+
+    "ray":
+    {
+	"iLife":         100,
+	"iSpeed":        75,
+	"aiColor":       [255, 128, 128],
+	"afDimensions":  [5, 75],
+	"iMax-firerate": 10
+    }
 }

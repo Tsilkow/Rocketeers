@@ -1,0 +1,85 @@
+{
+    "name": "Standard Star-Planet-Orbiter system",
+    
+    "fGravity":                 0.01,
+    "fAirFriction":             0.1,
+    
+    "iPlayerControlledFaction": 4,
+
+    "planets":
+    [
+	{
+	    "sName":            "White Star",
+	    "iRadius":          100000,
+	    "iMass":            2000000000,
+	    "aiPosition":       [ 0.0,  0.0],
+	    "aiVelocity":       [10.0, -8.0],
+	    "fAngularVelocity": 0.001,
+
+	    "orbit":
+	    {
+		"present": false
+	    },
+	    
+	    "ore":
+	    {
+		"present": false
+	    },
+
+	    "surface":
+	    {
+		"present":           true,
+		"aiColor":           [255, 255,   0],
+		"iTotalOfSegments":  1000,
+		"iGeneralAmplitude": 0,
+		"fSmoothness":       0.0,
+		"iPeakFrequency":    1,
+		"iPeakVariation":    0,
+		"iPeakAmplitude":    0
+	    },
+
+	    "atmosphere":
+	    {
+		"present": false
+	    }
+	}
+    ],
+
+    "vessels":
+    [
+	{
+	    "sName":       "001",
+	    "aiPosition":  [110000, 0],
+	    "iType":       0,
+	    "iAllegiance": 1
+	},
+	
+	{
+	    "sName":       "002",
+	    "aiPosition":  [110200, 0],
+	    "iType":       1,
+	    "iAllegiance": 1
+	},
+	
+	{
+	    "sName":       "003",
+	    "aiPosition":  [110400, 0],
+	    "iType":       0,
+	    "iAllegiance": 2
+	},
+	
+	{
+	    "sName":       "004",
+	    "aiPosition":  [110600, 0],
+	    "iType":       1,
+	    "iAllegiance": 3
+	},
+	
+	{
+	    "sName":       "005",
+	    "aiPosition":  [110800, 0],
+	    "iType":       0,
+	    "iAllegiance": 4
+	}
+    ]
+}

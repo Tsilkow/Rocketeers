@@ -54,6 +54,7 @@ int main()
     SignalSettings sSetts;
     RaySettings rSetts;
     VesselSettings vSetts;
+    PlanetSettings pSetts;
 
     if(!init("data/settings.json", textures, vSetts, sSetts, rSetts/*, viSetts*/)) return 1;
 
@@ -75,11 +76,10 @@ int main()
     shared_ptr<Actor> enemy = make_shared<AIActor>("A18-CT8");
 
     vector<Vessel> vessels;
-    vessels.emplace_back(enemy , "001" , sf::Vector2f( 000.f,  200.f), 0, 1, shared_vSetts, textures);
-    vessels.emplace_back(enemy , "002" , sf::Vector2f( 200.f,  200.f), 1, 1, shared_vSetts, textures);
-    vessels.emplace_back(enemy , "003" , sf::Vector2f( 400.f,  200.f), 0, 2, shared_vSetts, textures);
-    vessels.emplace_back(enemy , "004" , sf::Vector2f( 600.f,  200.f), 1, 3, shared_vSetts, textures);
-    vessels.emplace_back(player, "005", sf::Vector2f( 800.f,  200.f), 0, 4, shared_vSetts, textures);
+    vector<Planet> planets;
+
+    if(!setup("data/setup2.json", vessels, planets, player, enemy, textures, shared_vSetts, pSetts)) return 1;
+    
     string observedId = vessels.back().getId();
     cout << observedId << endl;
     
@@ -267,6 +267,11 @@ int main()
 		for(auto it = rays.begin(); it != rays.end(); ++it)
 		{
 		    it->draw(window);
+		}
+
+		for(auto it = planets.begin(); it != planets.end(); ++it)
+		{
+		    it->draw(window, false);
 		}
 
 		for(auto it = vessels.begin(); it != vessels.end(); ++it)

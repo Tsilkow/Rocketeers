@@ -1,0 +1,27 @@
+{
+	 "sModel": "KETTLE2B",
+	 "sTexture": "data/graphics/KETTLE2B/",
+	 "iTotal-fuel-sprites": 5,
+	 "iTotal-gold-sprites": 5,
+	 "aafCollision-mask": [
+		  [ 0.00, -0.50],
+		  [-0.20, -0.35],
+		  [-0.30,  0.50],
+		  [ 0.30,  0.50],
+		  [ 0.20, -0.35]
+	 ],
+	 "aafBarrels": [],
+
+	 "iSize":                200,
+	 "iBase-mass":           2000,
+	 "iFuel-capacity":       10000,
+	 "iGold-capacity":       2000,
+	 "iMining-speed":        1,
+	 "iShooting-frequency":  0,
+	 "iRay-resistance":      4,
+	 "fThrust-power":        200.0,
+	 "iThrust-fuel-use":    -5,
+	 "fManuverability":      0.001,
+	 "iTurn-fuel-use":      -1,
+	 "iDurability":          1000000
+}

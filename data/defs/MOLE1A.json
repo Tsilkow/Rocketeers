@@ -1,0 +1,33 @@
+{
+	 "sModel": "MOLE1A",
+	 "sTexture": "data/graphics/MOLE1A/",
+	 "iTotal-fuel-sprites": 6,
+	 "iTotal-gold-sprites": 6,
+	 "aafCollision-mask": [
+		  [ 0.00, -0.21],
+		  [ 0.11, -0.14],
+		  [ 0.11, -0.08],
+		  [ 0.31,  0.32],
+		  [ 0.31,  0.39],
+		  [ 0.28,  0.50],
+		  [-0.28,  0.50],
+		  [-0.31,  0.39],
+		  [-0.31,  0.32],
+		  [-0.11, -0.08],
+		  [-0.11, -0.14]
+	 ],
+	 "aafBarrels": [],
+
+	 "iSize":                200,
+	 "iBase-mass":           2000,
+	 "iFuel-capacity":       10000,
+	 "iGold-capacity":       2000,
+	 "iMining-speed":        1,
+	 "iShooting-frequency":  0,
+	 "iRay-resistance":      3,
+	 "fThrust-power":        200.0,
+	 "iThrust-fuel-use":    -5,
+	 "fManuverability":      0.001,
+	 "iTurn-fuel-use":      -1,
+	 "iDurability":          1000000
+}

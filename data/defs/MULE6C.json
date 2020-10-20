@@ -20,6 +20,7 @@
 		  [-0.20,  0.27],
 		  [-0.23,  0.38]
 	 ],
+	 "aafBarrels": [],
 
 	 "iSize":                100,
 	 "iBase-mass":           2000,
@@ -27,6 +28,7 @@
 	 "iGold-capacity":       2000,
 	 "iMining-speed":        1,
 	 "iShooting-frequency":  30,
+	 "iRay-resistance":      3,
 	 "fThrust-power":        200.0,
 	 "iThrust-fuel-use":    -5,
 	 "fManuverability":      0.001,

@@ -1,0 +1,97 @@
+{
+    "name": "Standard Star-Planet-Orbiter system",
+    
+    "fGravity": 0.01,
+    "fAirFriction": 0.1,
+
+    "planets":
+    {
+	[
+	    {
+		"sName":            "White Star",
+		"aiPosition":       [ 0.0,  0.0],
+		"aiVelocity":       [10.0, -8.0],
+		"iRadius":          100000,
+		"iMass":            2000000000,
+		"iAngularVelocity": 0.001,
+		"aiCoreColor":      [255, 255, 255],
+
+		"orbit":
+		{
+		    "present": false
+		},
+		
+		"ore":
+		{
+		    "present": false
+		},
+
+		"surface":
+		{
+		    "present":           true,
+		    "aiColor":           [255, 255,   0],
+		    "iTOSegments":       1000,
+		    "iGeneralAmplitude": 0,
+		    "fSmoothness":       0.0,
+		    "iPeakFrequency":    0,
+		    "iPeakVariation":    0,
+		    "iPeakAmplitude":    0
+		},
+
+		"atmosphere":
+		{
+		    "present": false
+		}
+	    },
+
+	    {
+		"sName":            "Orange Planet",
+		"iRadius":          25000,
+		"iMass":            20000000,
+		"iAngularVelocity": 0.001,
+		"aiCoreColor":      [255,  96,   0],
+
+		"orbit":
+		{
+		    "present":      true,
+		    "around":       "White Star",
+		    "iAphelium":    250000,
+		    "iPeryhelium":  300000,
+		    "iOrbitPeriod": 5000,
+		    "fOrbitTilt":   2.0,
+		    "bClockwise":   true
+		},
+		
+		"ore":
+		{
+		    "present":      true,
+		    "aiColor":      [255, 255,   0],
+		    "fProbability": 0.1,
+		    "iTotal":       6000,
+		    "varaition":    0.5
+		},
+
+		"surface":
+		{
+		    "present":           true,
+		    "aiColor":           [255,  96,   0],
+		    "iTOSegments":       250,
+		    "iGeneralAmplitude": 5,
+		    "fSmoothness":       0.2,
+		    "iPeakFrequency":    10,
+		    "iPeakVariation":    3,
+		    "iPeakAmplitude":    200
+		},
+
+		"atmosphere":
+		{
+		    "present":          true,
+		    "aiColor":          [172, 106, 84],
+		    "iHeight":          10000,
+		    "iLayers":          10,
+		    "fVanishingFactor": 1.0
+		}
+	    }
+	]
+    }
+}

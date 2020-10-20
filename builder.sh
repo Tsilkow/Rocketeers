@@ -9,7 +9,7 @@ cp -rf data/ build/
 cd build/
 cmake ..
 if eval cmake --build .; then
-    ./Sapper
+    ./Rocketeers
     cd ..
 else
     cd ..

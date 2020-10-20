@@ -1,5 +1,6 @@
 #include "init.hpp"
 
+
 using namespace nlohmann;
 
 bool init(std::string filename, ResourceHolder<sf::Texture, std::string>& textures,

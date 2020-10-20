@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-#include "tom.hpp"
+#include "commons.hpp"
 
 
 struct SignalSettings

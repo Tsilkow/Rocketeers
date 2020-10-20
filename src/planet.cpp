@@ -1,7 +1,6 @@
 #include "planet.hpp"
 
 
-
 void connectPeaks(std::vector<int>& result, int begin, int end, int amplitude, int loop)
 {
     if(end - begin < 2) return;

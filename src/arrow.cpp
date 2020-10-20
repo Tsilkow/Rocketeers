@@ -1,5 +1,4 @@
 #include "arrow.hpp"
-#include "tom.hpp"
 
 
 Arrow::Arrow(sf::Vector2f origin, float length, float angle, sf::Color color, int width):

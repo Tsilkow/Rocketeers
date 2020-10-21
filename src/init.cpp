@@ -209,7 +209,6 @@ bool setup(std::string filename, std::vector<Vessel>& vessels, std::vector<Plane
 		Catmosphere   = sf::Color(mainParse["planets"][i]["atmosphere"]["aiColor"][0].get<int>(),
 					  mainParse["planets"][i]["atmosphere"]["aiColor"][1].get<int>(),
 					  mainParse["planets"][i]["atmosphere"]["aiColor"][2].get<int>());
-		std::cout << "I'm through with atmosphere" << std::endl;
 	    }
 	    else
 	    {		
@@ -237,7 +236,6 @@ bool setup(std::string filename, std::vector<Vessel>& vessels, std::vector<Plane
 				 atmHeight,
 				 atmVanishFact,
 				 Catmosphere);
-	    std::cout << "I'm through with planet" << std::endl;
 	}
 
 	for(int i = 0; i < mainParse["vessels"].size(); ++i)

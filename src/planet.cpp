@@ -58,19 +58,28 @@ Planet::Planet(const std::shared_ptr<PlanetSettings> pSetts, std::string name, i
     std::cout << M_PI/((float)TOSegments) << std::endl;
     m_heights = generateHeights(m_radius, TOSegments, amplitude, smoothness, peakFrequency, peakVariation, peakAmplitude);
 
-    m_dynSurface.emplace_back(sf::Vector2f(0.f, 0.f), m_Cterrain);
-    m_dynAtmosphere.emplace_back(sf::Vector2f(0.f, 0.f), m_Catmosphere);
+    int atmosphereStart = m_radius - peakAmplitude;
+    sf::Color CatmosphereEdge(m_Catmosphere.r, m_Catmosphere.g, m_Catmosphere.b, 0);
+
+    m_statSurface.emplace_back(0.f, 0.f);
+    m_dynSurface.emplace_back(m_statSurface.back(), m_Cterrain);
     for(int i = 0; i <= TOSegments; ++i)
     {
-	m_statSurface.emplace_back(sin(2 * M_PI * modulo(i, TOSegments)/TOSegments) *
-				   m_heights[modulo(i, TOSegments)],
-				   cos(2 * M_PI * modulo(i, TOSegments)/TOSegments) *
-				   m_heights[modulo(i, TOSegments)]);
+	sf::Vector2f direction(sin(2 * M_PI * modulo(i, TOSegments)/TOSegments),
+			       cos(2 * M_PI * modulo(i, TOSegments)/TOSegments));
+	// surface is constructed using triangles connected at a common vertice in the middle of the planet (sf::TriangleFan)
+	m_statSurface.emplace_back(direction * (float)m_heights[modulo(i, TOSegments)]);
 	m_dynSurface.emplace_back(m_statSurface.back(), m_Cterrain);
 	
-	m_statAtmosphere.emplace_back(sin(2 * M_PI * modulo(i, TOSegments)/TOSegments) * m_atmHeight,
-				      cos(2 * M_PI * modulo(i, TOSegments)/TOSegments) * m_atmHeight);
-	m_dynAtmosphere.emplace_back(m_statAtmosphere.back(), sf::Color(0, 0, 0, 0));
+	// atmosphere is constructed using connected triangles (sf::TriangleStrip), which form a quad closer to the actual surface | result is a nice ring a
+	m_statAtmosphere.emplace_back(direction * (float)atmosphereStart);
+	m_dynAtmosphere.emplace_back(m_statAtmosphere.back(), m_Catmosphere);
+	m_statAtmosphere.emplace_back(direction * (float)(m_radius + m_atmHeight));
+	m_dynAtmosphere.emplace_back(m_statAtmosphere.back(), CatmosphereEdge);
+
+	//printVector(direction * (float)atmosphereStart, true);
+	//printVector(direction * (float)(m_radius + m_atmHeight), true);
+	//std::cout << "(" << atmosphereStart << " " << m_radius + m_atmHeight << ")" << std::endl;
     }
 }
 
@@ -96,16 +105,18 @@ void Planet::tick()
 sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, int objectMass)
 {
     sf::Vector2f result = (m_position - objectPosition) *
-	m_pSetts->gravConst * (float)m_mass * (float)objectMass *
-	1.f/raiseToPower(length(m_position - objectPosition), 3);
+	m_pSetts->gravConst * (float)m_mass * (float)objectMass /
+	raiseToPower(length(m_position - objectPosition), 3);
 
-    printVector(result, true);
+    /*std::cout << "{" << m_pSetts->gravConst * (float)m_mass * (float)objectMass << " " << length(m_position - objectPosition) << " ";
+    printVector(result, false);
+    std::cout << "}" << std::endl;*/
 
     return result;
 }
 
 void Planet::draw(sf::RenderTarget& target, bool orbit)
 {
-    target.draw(&m_dynAtmosphere[0], m_dynAtmosphere.size(), sf::TriangleFan);
+    target.draw(&m_dynAtmosphere[0], m_dynAtmosphere.size(), sf::TriangleStrip);
     target.draw(&m_dynSurface[0], m_dynSurface.size(), sf::TriangleFan);
 }

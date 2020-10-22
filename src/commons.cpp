@@ -80,10 +80,12 @@ float modulo(float a, float b)
 {
     while(a < 0)
     {
+	//std::cout << "added " << b << " to " << a << std::endl;
 	a += b;
     }
     while(a >= b)
     {
+	//std::cout << "subtracted " << b << " from " << a << std::endl;
 	a -= b;
     }
 

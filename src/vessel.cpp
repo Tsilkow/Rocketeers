@@ -386,7 +386,7 @@ float dotProduct(sf::Vector2f a, sf::Vector2f b)
     return a.x * b.x + a.y * b.y;
 }
 
-bool resolveCollision(Vessel& A, Vessel& B)
+bool resolveVesselCollision(Vessel& A, Vessel& B)
 {
     sf::Vector2f connector = B.getPosition() - A.getPosition();
 	    

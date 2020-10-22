@@ -34,6 +34,7 @@ class Planet
     std::vector<sf::Vector2f> m_statAtmosphere;
     std::vector<sf::Vertex> m_dynSurface;
     std::vector<sf::Vertex> m_dynAtmosphere;
+    std::vector<sf::Vertex> m_line;
 
     sf::Vector2f m_position;
     sf::Vector2f m_velocity;
@@ -51,4 +52,12 @@ class Planet
     sf::Vector2f exertForce(sf::Vector2f objectPosition, int objectMass);
 
     void draw(sf::RenderTarget& target, bool orbit = false);
+
+    std::vector<sf::Vector2f> getSurfaceAt(float angle);
+
+    float getHeightAt(float angle);
+    
+    const sf::Vector2f& getPosition() {return m_position; }
+    const sf::Vector2f& getVelocity() {return m_velocity; }
+    
 };

@@ -262,7 +262,7 @@ int main()
 		{
 		    for(int j = i+1; j < vessels.size(); ++j)
 		    {
-		        resolveCollision(vessels[i], vessels[j]);
+		        resolveVesselCollision(vessels[i], vessels[j]);
 		    }
 		}
 
@@ -298,7 +298,7 @@ int main()
 		break;		 
 	}
 	window.display();
-	//std::cout << tick << std::endl;
+	std::cout << tick << std::endl;
 	++tick;
     }
 	 

@@ -166,4 +166,4 @@ class Vessel
     const float getBounce() {return m_vSetts->bouncyness; }
 };
 
-bool resolveCollision(Vessel& A, Vessel& B);
+bool resolveVesselCollision(Vessel& A, Vessel& B);

@@ -92,6 +92,11 @@ float modulo(float a, float b)
     return a;
 }
 
+float dotProduct(sf::Vector2f a, sf::Vector2f b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
 float length(sf::Vector2f distance)
 {
     return sqrt(distance.x * distance.x + distance.y * distance.y);

@@ -30,6 +30,7 @@ char randomSp();
 std::vector<int> range(int min, int max);
 std::vector<int> choose(std::vector<int> from, int many);
 float modulo(float a, float b);
+float dotProduct(sf::Vector2f a, sf::Vector2f b);
 float length(sf::Vector2f distance);
 float degToRad(float angle);
 float radToDeg(float angle);

@@ -11,4 +11,4 @@
 #include "planet.hpp"
 
 
-void resolvePlanetCollision(Planet& planet, Vessel& vessel);
+bool resolvePlanetCollision(Planet& planet, Vessel& vessel);

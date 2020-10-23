@@ -381,11 +381,6 @@ void Vessel::draw(sf::RenderTarget& target, bool debug)
     }
 }
 
-float dotProduct(sf::Vector2f a, sf::Vector2f b)
-{
-    return a.x * b.x + a.y * b.y;
-}
-
 bool resolveVesselCollision(Vessel& A, Vessel& B)
 {
     sf::Vector2f connector = B.getPosition() - A.getPosition();
@@ -424,7 +419,7 @@ bool resolveVesselCollision(Vessel& A, Vessel& B)
 	    A.applyForce (-impulse * (1 + bounce));
 	    A.applyStrain(length(impulse) * (1 - bounce));
 	    B.applyForce( impulse * (1 + bounce));
-	    A.applyStrain(length(impulse) * (1 - bounce));
+	    B.applyStrain(length(impulse) * (1 - bounce));
 
 	    return true;
 	}

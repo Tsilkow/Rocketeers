@@ -35,6 +35,7 @@ class Planet
     std::vector<sf::Vertex> m_dynSurface;
     std::vector<sf::Vertex> m_dynAtmosphere;
     std::vector<sf::Vertex> m_line;
+    std::vector<sf::Vertex> m_highlight;
 
     sf::Vector2f m_position;
     sf::Vector2f m_velocity;
@@ -59,5 +60,6 @@ class Planet
     
     const sf::Vector2f& getPosition() {return m_position; }
     const sf::Vector2f& getVelocity() {return m_velocity; }
+    const int& getMass() {return m_mass; }
     
 };

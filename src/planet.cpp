@@ -84,6 +84,11 @@ Planet::Planet(const std::shared_ptr<PlanetSettings> pSetts, std::string name, i
 
     m_line.emplace_back(m_position, sf::Color(255, 0, 0));
     m_line.emplace_back(m_position, sf::Color(255, 0, 0));
+
+    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
+    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
+    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
+    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
 }
 
 void Planet::tick()
@@ -105,9 +110,6 @@ void Planet::tick()
     {
 	m_dynAtmosphere[i].position = R.transformPoint(m_statAtmosphere[i]) + m_position;
     }
-
-    m_line[0].position = m_position;
-    m_line[1].position = m_position + getHeightAt(m_angle) * angleToVector2f(m_angle);
 }
 
 sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, int objectMass)
@@ -128,11 +130,12 @@ std::vector<sf::Vector2f> Planet::getSurfaceAt(float angle)
     std::vector<sf::Vector2f> result;
     angle = modulo(angle, 2*M_PI);
 
-    int middle = (int)std::floor(angle/(2*M_PI) * m_heights.size());
+    int middle = std::floor(modulo(angle - m_angle, 2*M_PI)/(2*M_PI) * (m_heights.size()-1));
 
-    for(int i = -1; i <= 1; ++i)
+    for(int i = -1; i <= 2; ++i)
     {
 	result.push_back(m_dynSurface[1+modulo(middle+i, m_heights.size())].position);
+	m_highlight[i+1].position = result.back();
     }
 
     return result;
@@ -149,6 +152,9 @@ float Planet::getHeightAt(float angle)
 	m_heights[       (int)std::floor(weight)                         ] * (std::floor(weight+1) - weight) +
 	m_heights[modulo((int)std::floor(weight) + 1, m_heights.size()-1)] * (weight - std::floor(weight));
 
+    m_line[0].position = m_position;
+    m_line[1].position = m_position + result * angleToVector2f(angle);
+
     return result;
 }
 
@@ -157,4 +163,5 @@ void Planet::draw(sf::RenderTarget& target, bool orbit)
     target.draw(&m_dynAtmosphere[0], m_dynAtmosphere.size(), sf::TriangleStrip);
     target.draw(&m_dynSurface[0], m_dynSurface.size(), sf::TriangleFan);
     target.draw(&m_line[0], m_line.size(), sf::Lines);
+    target.draw(&m_highlight[0], m_highlight.size(), sf::LineStrip);
 }

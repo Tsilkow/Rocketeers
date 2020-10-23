@@ -5,6 +5,8 @@
 
 #include "commons.hpp"
 #include "vessel.hpp"
+#include "planet.hpp"
+#include "pv-interaction.hpp"
 #include "resources.hpp"
 #include "init.hpp"
 
@@ -272,6 +274,8 @@ int main()
 		    {
 			vessels[j].applyForce(planets[i].exertForce(vessels[j].getPosition(),
 								    vessels[j].getMass()));
+
+			resolvePlanetCollision(planets[i], vessels[j]);
 		    }
 		}
 

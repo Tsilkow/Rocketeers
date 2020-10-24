@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "commons.hpp"
+#include "arrow.hpp"
 
 
 struct PlanetSettings
@@ -34,8 +35,10 @@ class Planet
     std::vector<sf::Vector2f> m_statAtmosphere;
     std::vector<sf::Vertex> m_dynSurface;
     std::vector<sf::Vertex> m_dynAtmosphere;
-    std::vector<sf::Vertex> m_line;
-    std::vector<sf::Vertex> m_highlight;
+    std::vector<sf::Vertex> m_surfaceHighlight;
+    std::vector<sf::Vertex> m_heightHighlight;
+    Arrow m_velocityArrow;
+    Arrow m_surfaceVector;
 
     sf::Vector2f m_position;
     sf::Vector2f m_velocity;
@@ -45,6 +48,9 @@ class Planet
     sf::Color m_Cterrain;
     sf::Color m_Catmosphere;
 
+    // first number is the index of the segment, the second one is a number on range 0.0 to 1.0 of how far on this segment the precise point is
+    std::pair<int, float> getSegmentAt(float angle);
+
     public:
     Planet(const std::shared_ptr<PlanetSettings> pSetts, std::string name, int radius, int mass, sf::Vector2f position, float angVelocity, int TOSegments, int amplitude, int smoothness, int peakFrequency, int peakVariation, int peakAmplitude, sf::Color Cterrain, int atmHeight, float atmVanishFact, sf::Color Catmosphere);
 
@@ -53,10 +59,16 @@ class Planet
     sf::Vector2f exertForce(sf::Vector2f objectPosition, int objectMass);
 
     void draw(sf::RenderTarget& target, bool orbit = false);
-
+    
+    float getHeightAt(float angle);
+    
+    sf::Vector2f getSurfacePoint(float angle);
+	
     std::vector<sf::Vector2f> getSurfaceAt(float angle);
 
-    float getHeightAt(float angle);
+    sf::Vector2f getVelocityAt(float angle);
+
+    sf::Vector2f getSurfaceVector(float angle);
     
     const sf::Vector2f& getPosition() {return m_position; }
     const sf::Vector2f& getVelocity() {return m_velocity; }

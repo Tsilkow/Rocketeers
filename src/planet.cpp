@@ -82,13 +82,13 @@ Planet::Planet(const std::shared_ptr<PlanetSettings> pSetts, std::string name, i
 	//std::cout << "(" << atmosphereStart << " " << m_radius + m_atmHeight << ")" << std::endl;
     }
 
-    m_line.emplace_back(m_position, sf::Color(255, 0, 0));
-    m_line.emplace_back(m_position, sf::Color(255, 0, 0));
-
-    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
-    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
-    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
-    m_highlight.emplace_back(m_position, sf::Color(0, 255, 0));
+    m_heightHighlight.emplace_back(m_position, sf::Color(255, 0, 0));
+    m_heightHighlight.emplace_back(m_position, sf::Color(255, 0, 0));
+    
+    m_surfaceHighlight.emplace_back(m_position, sf::Color(255, 0, 0));
+    m_surfaceHighlight.emplace_back(m_position, sf::Color(255, 0, 0));
+    m_surfaceHighlight.emplace_back(m_position, sf::Color(255, 0, 0));
+    m_surfaceHighlight.emplace_back(m_position, sf::Color(255, 0, 0));
 }
 
 void Planet::tick()
@@ -110,6 +110,7 @@ void Planet::tick()
     {
 	m_dynAtmosphere[i].position = R.transformPoint(m_statAtmosphere[i]) + m_position;
     }
+
 }
 
 sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, int objectMass)
@@ -125,17 +126,23 @@ sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, int objectMass)
     return result;
 }
 
+std::pair<int, float> Planet::getSegmentAt(float angle)
+{
+    float point = modulo(angle - m_angle, 2*M_PI)/(2*M_PI) * (m_dynSurface.size()-2);
+
+    return std::pair<int, float>((int)std::floor(point), point - std::floor(point));
+}
+
 std::vector<sf::Vector2f> Planet::getSurfaceAt(float angle)
 {
     std::vector<sf::Vector2f> result;
-    angle = modulo(angle, 2*M_PI);
 
-    int middle = std::floor(modulo(angle - m_angle, 2*M_PI)/(2*M_PI) * (m_heights.size()-1));
+    int middle = getSegmentAt(angle).first;
 
     for(int i = -1; i <= 2; ++i)
     {
-	result.push_back(m_dynSurface[1+modulo(middle+i, m_heights.size())].position);
-	m_highlight[i+1].position = result.back();
+	result.push_back(m_dynSurface[1+modulo(middle+i, m_dynSurface.size()-2)].position);
+	m_surfaceHighlight[i+1].position = result.back();
     }
 
     return result;
@@ -144,17 +151,41 @@ std::vector<sf::Vector2f> Planet::getSurfaceAt(float angle)
 float Planet::getHeightAt(float angle)
 {
     float result;
-    float weight = modulo(angle - m_angle, 2*M_PI)/(2*M_PI) * (m_heights.size()-1);
-
-    //std::cout << (int)std::floor(weight) << " " << modulo((int)std::floor(weight) + 1, m_heights.size()) <<" = " << (weight - std::floor(weight)) << " + " << (std::floor(weight+1) - weight) << std::endl;
+    std::pair<int, float> point = getSegmentAt(angle);
 
     result =
-	m_heights[       (int)std::floor(weight)                         ] * (std::floor(weight+1) - weight) +
-	m_heights[modulo((int)std::floor(weight) + 1, m_heights.size()-1)] * (weight - std::floor(weight));
+	m_heights[       point.first                         ] * (1.f - point.second) +
+	m_heights[modulo(point.first + 1, m_heights.size()-1)] * (      point.second);
 
-    m_line[0].position = m_position;
-    m_line[1].position = m_position + result * angleToVector2f(angle);
+    m_heightHighlight[0].position = m_position;
+    m_heightHighlight[1].position = m_position + result * angleToVector2f(angle);
 
+    return result;
+}
+
+sf::Vector2f Planet::getSurfacePoint(float angle)
+{
+    return m_position + getHeightAt(angle) * angleToVector2f(angle);
+}
+
+sf::Vector2f Planet::getVelocityAt(float angle)
+{
+    sf::Vector2f result = angleToVector2f(angle + M_PI/2.f) * m_angVelocity * getHeightAt(angle) + m_velocity;
+    sf::Vector2f start = m_position + getHeightAt(angle) * angleToVector2f(angle);
+    
+    m_velocityArrow.setDirection(start, start + result*60.f);
+    
+    return result;
+}
+
+sf::Vector2f Planet::getSurfaceVector(float angle)
+{
+    sf::Vector2f surface = getSurfaceAt(angle)[2] - getSurfaceAt(angle)[1];
+    sf::Vector2f start = getSurfacePoint(angle);
+    sf::Vector2f result = angleToVector2f(modulo(atan2(surface.y, surface.x) - M_PI/2.f, 2*M_PI));
+    
+    m_surfaceVector.setDirection(start, start + result);
+    
     return result;
 }
 
@@ -162,6 +193,8 @@ void Planet::draw(sf::RenderTarget& target, bool orbit)
 {
     target.draw(&m_dynAtmosphere[0], m_dynAtmosphere.size(), sf::TriangleStrip);
     target.draw(&m_dynSurface[0], m_dynSurface.size(), sf::TriangleFan);
-    target.draw(&m_line[0], m_line.size(), sf::Lines);
-    target.draw(&m_highlight[0], m_highlight.size(), sf::LineStrip);
+    m_velocityArrow.draw(target);
+    m_surfaceVector.draw(target);
+    target.draw(&m_heightHighlight[0], m_heightHighlight.size(), sf::LineStrip);
+    target.draw(&m_surfaceHighlight[0], m_surfaceHighlight.size(), sf::LineStrip);
 }

@@ -114,9 +114,9 @@ Vessel::Vessel(std::shared_ptr<Actor> actor, std::string name, sf::Vector2f posi
     m_flameSize = sf::Vector2f(((float)m_size) / textures.get("flame").getSize().x,
 			       ((float)m_size) / textures.get("flame").getSize().x);
 
-    m_velArrow = Arrow();
+    //m_velArrow = Arrow();
     m_velArrow.setColor(m_vSetts->velArrowColor);
-    m_forArrow = Arrow();
+    //m_forArrow = Arrow();
     m_forArrow.setColor(m_vSetts->forArrowColor);
     m_path.push_back(sf::Vertex(m_position, sf::Color::White));
 }

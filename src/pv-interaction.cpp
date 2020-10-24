@@ -4,9 +4,12 @@
 bool resolvePlanetCollision(Planet& planet, Vessel& vessel)
 {
     sf::Vector2f connector = vessel.getPosition() - planet.getPosition();
+    float angle = atan2(connector.y, connector.x);
 
-    float planetHeight = planet.getHeightAt(atan2(connector.y, connector.x));
-    std::vector<sf::Vector2f> planetSurface = planet.getSurfaceAt(atan2(connector.y, connector.x));
+    float planetHeight = planet.getHeightAt(angle);
+    std::vector<sf::Vector2f> planetSurface = planet.getSurfaceAt(angle);
+
+    planet.getVelocityAt(angle);
 
     if(length(connector) < (planetHeight + vessel.getSize()/2))
     {
@@ -30,15 +33,17 @@ bool resolvePlanetCollision(Planet& planet, Vessel& vessel)
 
         if(collision)
 	{
-	    float alongDir = dotProduct(vessel.getVelocity() - planet.getVelocity(),
-					connector/length(connector));
+	    sf::Vector2f surfaceVector = planet.getSurfaceVector(angle);
+	    float alongDir = dotProduct(vessel.getVelocity() - planet.getVelocityAt(angle),
+				        surfaceVector/length(surfaceVector));
 	    
 	    if(alongDir > 0) return false;
 	    
 	    sf::Vector2f impulse(0.f, 0.f);
-	    float bounce = vessel.getBounce();
+	    float bounce = 1.f;
 	    
-	    impulse = -alongDir * connector/length(connector)/(1.f/planet.getMass() + 1.f/vessel.getMass());
+	    impulse = -alongDir * surfaceVector/length(surfaceVector)/
+		(1.f/planet.getMass() + 1.f/vessel.getMass());
 
 	    vessel.applyForce( impulse * (1 + bounce));
 	    vessel.applyStrain(length(impulse) * (1 - bounce));

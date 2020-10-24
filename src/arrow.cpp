@@ -74,7 +74,7 @@ bool Arrow::setDirection(sf::Vector2f from, sf::Vector2f to)
 {
     m_origin = from;
     m_length = length(to - from);
-    m_angle = atan2(to.x - from.x, -(to.y - from.y)) - M_PI/2.f;
+    m_angle = atan2(to.y - from.y, to.x - from.x);
     calculate();
 	
     return true;

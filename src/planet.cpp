@@ -113,11 +113,24 @@ void Planet::tick()
 
 }
 
-sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, int objectMass)
+sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, sf::Vector2f objectVelocity,
+				float objectSize, int objectMass)
 {
-    sf::Vector2f result = (m_position - objectPosition) *
+    sf::Vector2f connector = objectPosition - m_position;
+    float angle = atan2(connector.y, connector.x);
+    sf::Vector2f relVelocity = objectVelocity - getVelocityAt(angle, length(connector));
+	
+    sf::Vector2f result(0.f, 0.f);
+
+    // gravity
+    result += (m_position - objectPosition) *
 	m_pSetts->gravConst * (float)m_mass * (float)objectMass /
 	raiseToPower(length(m_position - objectPosition), 3);
+    
+    //friction
+    result += -0.5f * m_pSetts->airFriConst * objectSize *
+	std::max(0.f, std::min(1.f, (m_radius + m_atmHeight - length(connector))/((float)m_atmHeight))) *
+	(relVelocity/length(relVelocity)) * (float)pow(length(relVelocity), 2);
 
     /*std::cout << "{" << m_pSetts->gravConst * (float)m_mass * (float)objectMass << " " << length(m_position - objectPosition) << " ";
     printVector(result, false);
@@ -168,10 +181,10 @@ sf::Vector2f Planet::getSurfacePoint(float angle)
     return m_position + getHeightAt(angle) * angleToVector2f(angle);
 }
 
-sf::Vector2f Planet::getVelocityAt(float angle)
+sf::Vector2f Planet::getVelocityAt(float angle, float height)
 {
-    sf::Vector2f result = angleToVector2f(angle + M_PI/2.f) * m_angVelocity * getHeightAt(angle) + m_velocity;
-    sf::Vector2f start = m_position + getHeightAt(angle) * angleToVector2f(angle);
+    sf::Vector2f result = angleToVector2f(angle + M_PI/2.f) * m_angVelocity * height + m_velocity;
+    sf::Vector2f start = m_position + height * angleToVector2f(angle);
     
     m_velocityArrow.setDirection(start, start + result*60.f);
     

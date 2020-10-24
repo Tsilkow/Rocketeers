@@ -1,8 +1,8 @@
 {
     "name": "Lone Planet",
     
-    "fGravity":                 0.1,
-    "fAirFriction":             0.1,
+    "fGravity":                 1.0,
+    "fAirFriction":             0.05,
     
     "iPlayerControlledFaction": 4,
 

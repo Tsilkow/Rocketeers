@@ -273,6 +273,8 @@ int main()
 		    for(int j = 0; j < vessels.size(); ++j)
 		    {
 			vessels[j].applyForce(planets[i].exertForce(vessels[j].getPosition(),
+								    vessels[j].getVelocity(),
+								    vessels[j].getSize(),
 								    vessels[j].getMass()));
 
 			resolvePlanetCollision(planets[i], vessels[j]);

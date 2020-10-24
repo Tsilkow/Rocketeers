@@ -56,7 +56,8 @@ class Planet
 
     void tick();
 
-    sf::Vector2f exertForce(sf::Vector2f objectPosition, int objectMass);
+    sf::Vector2f exertForce(sf::Vector2f objectPosition, sf::Vector2f objectVelocity,
+			    float objectSize, int objectMass);
 
     void draw(sf::RenderTarget& target, bool orbit = false);
     
@@ -66,7 +67,9 @@ class Planet
 	
     std::vector<sf::Vector2f> getSurfaceAt(float angle);
 
-    sf::Vector2f getVelocityAt(float angle);
+    sf::Vector2f getVelocityAt(float angle, float height);
+
+    sf::Vector2f getVelocityAtSurface(float angle) {return getVelocityAt(angle, getHeightAt(angle)); }
 
     sf::Vector2f getSurfaceVector(float angle);
     

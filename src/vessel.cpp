@@ -12,7 +12,7 @@ Vessel::Vessel(std::shared_ptr<Actor> actor, std::string name, sf::Vector2f posi
     m_position(position),
     m_angle(M_PI/2.f),
     m_velocity(0.f, 0.f),
-    m_angularVelocity(0.f),
+    m_angVelocity(0.f),
     m_force(0.f, 0.f),
     m_strain(0.f),
     m_fuel(vSetts->startingFuel),
@@ -126,6 +126,11 @@ void Vessel::applyForce(sf::Vector2f toAdd)
     m_force += toAdd;
 }
 
+void Vessel::applyRotation(float rotation)
+{
+    m_angVelocity += rotation;
+}
+
 void Vessel::applyStrain(float toAdd)
 {
     m_strain += toAdd;
@@ -167,15 +172,15 @@ bool Vessel::turn(bool clockwise)
 {
     int toUse = changeFuel(m_turnFuelUse);
 
-    if(fabs(m_manuverability * ((float)toUse)/m_turnFuelUse) > fabs(m_angularVelocity) &&
-       fabs(m_angularVelocity) > 0.f)
+    if(fabs(m_manuverability * ((float)toUse)/m_turnFuelUse) > fabs(m_angVelocity) &&
+       fabs(m_angVelocity) > 0.f)
     {
-	m_angularVelocity = 0.f;
+	m_angVelocity = 0.f;
 	return true;
     }
     else if(toUse != 0.f)
     {
-	m_angularVelocity += boolToSign(clockwise) * m_manuverability * ((float)toUse)/m_turnFuelUse;
+	m_angVelocity += boolToSign(clockwise) * m_manuverability * ((float)toUse)/m_turnFuelUse;
 	return true;
     }
 	 
@@ -201,7 +206,7 @@ bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_
     
     m_force = sf::Vector2f(0.f, 0.f);
     m_strain = 0;
-    m_angle += m_angularVelocity;
+    m_angle += m_angVelocity;
 
     if(!m_dead)
     {
@@ -297,8 +302,8 @@ bool Vessel::tick(int time, bool& createSignal, Signal& tempSignal, std::shared_
 
     if(!m_status.turnLeft && !m_status.turnRight)
     {
-	if(m_angularVelocity > 0.f) turn(false);
-	else if(m_angularVelocity < 0.f) turn(true);
+	if(m_angVelocity > 0.f) turn(false);
+	else if(m_angVelocity < 0.f) turn(true);
     }
 
     return !m_dead;

@@ -74,7 +74,7 @@ class Vessel
     sf::Vector2f m_position;
     float m_angle;
     sf::Vector2f m_velocity;
-    float m_angularVelocity;
+    float m_angVelocity;
     sf::Vector2f m_force;
     float m_strain;
     int m_fuel;
@@ -132,6 +132,8 @@ class Vessel
 	   ResourceHolder<sf::Texture, std::string>& textures);
 
     void applyForce(sf::Vector2f toAdd);
+
+    void applyRotation(float rotation);
     
     void applyStrain(float toAdd);
     
@@ -158,7 +160,7 @@ class Vessel
     const int getSize() {return m_size; }
     const float getAngle() {return m_angle; }
     const sf::Vector2f getVelocity() {return m_velocity; }
-    const float getAngularVelocity() {return m_angularVelocity; }
+    const float getAngVelocity() {return m_angVelocity; }
     const int getFuel() {return m_fuel; }
     const int getGold() {return m_gold; }
     const int getMass() {return m_mass; }

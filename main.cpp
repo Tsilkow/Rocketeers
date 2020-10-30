@@ -25,7 +25,7 @@ struct ViewSettings
 };
 
 void reposition(sf::Vector2i resolution, sf::Vector2i newResolution, sf::View& manualView,
-		sf::View& focusView, bool resetCenter = false)
+		sf::View& focusView, sf::View& planetView, bool resetCenter = false)
 {
     if(resetCenter)
     {
@@ -36,6 +36,10 @@ void reposition(sf::Vector2i resolution, sf::Vector2i newResolution, sf::View& m
 	focusView.setCenter(sf::Vector2f(0, 0));
 	focusView.setSize(sf::Vector2f(newResolution));
 	focusView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
+	
+	planetView.setCenter(sf::Vector2f(0, 0));
+	planetView.setSize(sf::Vector2f(newResolution));
+	planetView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
     }
     else
     {
@@ -44,6 +48,9 @@ void reposition(sf::Vector2i resolution, sf::Vector2i newResolution, sf::View& m
 
 	focusView.setSize(sf::Vector2f(newResolution.x * focusView.getSize().x / resolution.x,
 				       newResolution.y * focusView.getSize().y / resolution.y));
+	
+	planetView.setSize(sf::Vector2f(newResolution.x * planetView.getSize().x / resolution.x,
+					newResolution.y * planetView.getSize().y / resolution.y));
     }
 }
 
@@ -107,10 +114,10 @@ int main()
     sf::View planetView;
     sf::View textView;
 
-    enum ViewMode{Manual, Focus};
+    enum ViewMode{Manual, Focus, Planet};
     ViewMode currentMode = ViewMode::Manual;
 
-    reposition(viSetts.resolution, viSetts.resolution, manualView, focusView, true);
+    reposition(viSetts.resolution, viSetts.resolution, manualView, focusView, planetView, true);
 
     while(!exit)
     {
@@ -130,7 +137,7 @@ int main()
 			case sf::Event::Resized:
 			    reposition(viSetts.resolution, sf::Vector2i(event.size.width,
 									event.size.height),
-				       manualView, focusView);
+				       manualView, focusView, planetView);
 			    viSetts.resolution.x = event.size.width;
 			    viSetts.resolution.y = event.size.height;
 			    break;
@@ -161,6 +168,9 @@ int main()
 					break;
 				    case sf::Keyboard::F2:
 					currentMode = ViewMode::Focus;
+					break;
+				    case sf::Keyboard::F3:
+					currentMode = ViewMode::Planet;
 					break;
 				}
 			    }
@@ -204,6 +214,7 @@ int main()
 		{
 		    case ViewMode::Manual: window.setView(manualView); break;
 		    case ViewMode::Focus:  window.setView(focusView);  break;
+		    case ViewMode::Planet: window.setView(planetView);  break;
 		}
 
 
@@ -254,7 +265,18 @@ int main()
 			}
 		    }
 								
-		    if(observedId == vessels[i].getId()) vessels[i].centerView(focusView);
+		    if(observedId == vessels[i].getId())
+		    {
+			sf::Vector2f closestSurface = 
+			    planets[0].getSurfacePoint(planets[0].getAngleTo(vessels[i].getPosition()));
+			sf::Vector2f connector = closestSurface - vessels[i].getPosition();
+			vessels[i].centerView(focusView);
+
+			planetView.setCenter(vessels[i].getPosition() + connector * 0.5f);
+			planetView.setRotation(radToDeg(atan2(connector.y, connector.x) - M_PI/2.f));
+			planetView.setSize((float)viSetts.resolution.x / (float)viSetts.resolution.y *
+					   (length(connector) + 500.f), length(connector) + 500.f);
+		    }
 								
 		    if(emitted) signals.push_back(tempSignal);
 		    if(shot)    rays   .push_back(tempRay   );

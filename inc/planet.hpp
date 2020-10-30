@@ -60,6 +60,8 @@ class Planet
 			    float objectSize, int objectMass);
 
     void draw(sf::RenderTarget& target, bool orbit = false);
+
+    float getAngleTo(sf::Vector2f target);
     
     float getHeightAt(float angle);
     

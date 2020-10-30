@@ -123,9 +123,9 @@ sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, sf::Vector2f object
     sf::Vector2f result(0.f, 0.f);
 
     // gravity
-    result += (m_position - objectPosition) *
+    result += -connector *
 	m_pSetts->gravConst * (float)m_mass * (float)objectMass /
-	raiseToPower(length(m_position - objectPosition), 3);
+	raiseToPower(length(-connector), 3);
     
     //friction
     result += -0.5f * m_pSetts->airFriConst * objectSize *
@@ -137,6 +137,13 @@ sf::Vector2f Planet::exertForce(sf::Vector2f objectPosition, sf::Vector2f object
     std::cout << "}" << std::endl;*/
 
     return result;
+}
+
+float Planet::getAngleTo(sf::Vector2f target)
+{
+    sf::Vector2f connector = target - m_position;
+    
+    return atan2(connector.y, connector.x);
 }
 
 std::pair<int, float> Planet::getSegmentAt(float angle)
